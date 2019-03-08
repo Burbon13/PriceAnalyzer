@@ -3,6 +3,24 @@ from bs4 import BeautifulSoup
 import re
 # from app.src.url import *
 
+shops = {
+    1: 'emag',
+    2: 'altex',
+    3: 'mediagalaxy'
+}
+
+
+categories = {
+    1: 'laptopuri',
+    2: 'telefoane-mobile',
+    3: 'tablete',
+    4: 'televizoare',
+    5: 'boxe-portabile',
+    6: 'casti-audio',
+    7: 'console-hardware'
+}
+
+
 def url_search_generator(shop, category, product_name):   # !!!may need changes!!!
     if shop == 'emag':
         return 'https://www.emag.ro/search/' + category + '/stoc/vendor/emag/' + '+'.join(product_name.strip().split())
@@ -13,8 +31,10 @@ def get_plain_text(parent):
         return ''
     return ''.join(x.strip() + ' ' for x in parent.find_all(text=True, recursive=False)).strip()
 
+
 def find_whole_word(text, word):
     return re.compile(r'\b({0})\b'.format(word), flags=re.IGNORECASE).search(text)
+
 
 def verify_card_title(title, searched_title):
     title = title.lower()
@@ -23,6 +43,14 @@ def verify_card_title(title, searched_title):
         if find_whole_word(title, token) is None:
             return False
     return True
+
+
+def get_product_id(link_to_product):
+    s_matched =  re.compile('Product-Id=[0-9]*').search(link_to_product).group()
+    # id_matched = re.compile('[0-9]*').search(s_matched).group()  '*' finds first string as being empty - matches
+    id_matched = re.compile('[0-9]+').search(s_matched).group()
+    return int(id_matched)
+
 
 def get_data_from_card(html_card, searched_title): # !!!may need changes!!!
     title = html_card.find('a', class_='product-title js-product-url')
@@ -33,18 +61,20 @@ def get_data_from_card(html_card, searched_title): # !!!may need changes!!!
     old_price = html_card.find('p', class_='product-old-price').find('s')
     new_price = html_card.find('p', class_='product-new-price')
     link_to_product = title['href']
+    product_id = get_product_id(link_to_product)
     print('Title: ' + get_plain_text(title))
     print('Old price: ' + get_plain_text(old_price))
     print('New price: ' + get_plain_text(new_price))
+    print('Product id: ' + str(product_id))
     print('Link: ' + link_to_product)
     print('--------------------------------')
 
+
 def run():
     # category = input('Category: ').strip()
-    category = 'telefoane-mobile'
     # name = input('Name: ').strip()
-    name = 'iphone x 64gb'
-    url = url_search_generator('emag', category, name)
+    name = 'ipad pro 2018'
+    url = url_search_generator(shops[1], categories[3], name)
     try:
         response = requests.get(url)
         html_data = response.content
@@ -57,3 +87,5 @@ def run():
 
 
 run()
+
+#print(get_product_id('https://www.emag.ro/apple-ipad-pro-2018-11-256gb-cellular-silver-mu172hc-a/pd/DJNSR4BBM/?X-Search-Id=ae9e2db81b7196c66864&X-Product-Id=5115157&X-Search-Page=1&X-Search-Position=6&X-Section=search&X-MB=0&X-Search-Action=view'))
