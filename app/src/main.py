@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
+import sqlite3
+import pymongo
 
 shops = {
     1: 'emag',
@@ -25,6 +27,7 @@ def url_search_generator(shop, category, product_name):   # !!!may need changes!
     if shop == 'emag':
         return 'https://www.emag.ro/search/' + category + '/stoc/vendor/emag/' + '+'.join(product_name.strip().split())
     return None
+
 
 def get_plain_text(parent):
     if parent is None:
@@ -91,8 +94,10 @@ def get_data_from_card(html_card, searched_title): # !!!may need changes!!!
 
 
 def run():
+    sqlite_connection = sqlite3.connect('prices.sqlite3')
     # category = input('Category: ').strip()
     # name = input('Name: ').strip()
+    return
     name = 'ipad pro 2018'
     url = url_search_generator(shops[1], categories[3], name)
     try:
