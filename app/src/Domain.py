@@ -24,10 +24,11 @@ class User:
 
 
 class Product:
-    def __init__(self, id, title, link):
+    def __init__(self, id, title, link, monitored=False):
         self._id = id
         self.title = title
         self.link = link
+        self.monitored = monitored
 
     def __str__(self) -> str:
         return 'Id: ' + str(self._id) + '\n' + \

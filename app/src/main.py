@@ -17,7 +17,7 @@ def save_to_db(product_data_list, mongo_db):
 
 
 def scan(mongo_db):
-    product_name = 'nokia'
+    product_name = 'motorola'
     product_category = shops['emag']['categories']['phones']
     shop = 'emag'
     url = url_search_generator(shop, product_category, product_name)

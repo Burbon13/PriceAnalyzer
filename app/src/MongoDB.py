@@ -23,4 +23,10 @@ class MongoDB:
 
     def get_all_monitored_products(self):
         logging.info('DB query to find all products')
-        return self.__product_table.find()
+        filter = {'monitored' : True}
+        return self.__product_table.find(filter)
+
+    def set_monitoring_product(self, product_id, to_monitor=True):
+        new_values = { "$set": { "monitored": to_monitor } }
+        filter = {'_id' : product_id}
+        self.__product_table.update_one(filter, new_values)
