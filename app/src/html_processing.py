@@ -3,6 +3,7 @@ from Domain import ProductData
 from datetime import datetime
 from text_processing import verify_card_title, get_product_id
 
+# ---------------------------- HTML utils ----------------------------------------------------
 
 # Returns the text from 1'st level depth of a html tag
 def get_plain_text(tag) -> str:
@@ -11,24 +12,29 @@ def get_plain_text(tag) -> str:
     return  ''.join(x.strip() + ' ' for x in tag.find_all(text=True, recursive=False)).strip()
 
 
+# ----------------------------- HTML searches ----------------------------------------------------
+
 # Will return a history instance from a certain products page
 def get_history_from_product_page(html_page, shop='emag'):
     fun_dict = {'emag': ghfpp_emag}
     return fun_dict[shop](html_page)
 
 
-def ghfpp_emag(html_page):
-    print(html_page)
-    return 'haah'
-
-
+# Returns a ProductData list from an html search page
 def scan_html_for_products(html_data, shop, product_name):
     html_soup = BeautifulSoup(html_data, 'html.parser')
-    if shop == 'emag':
-        return scan_emag_html(html_soup, product_name)
-    return None
+    fun_dict = {'emag': scan_emag_html}
+    return fun_dict[shop](html_soup, product_name)
 
-# Returns a ProductData list from an html emag search page
+
+# Returns an instance of ProductData from a html
+# Returns None if the card is invalid
+def get_data_from_card(html_card, searched_title, shop='emag'):
+    fun_dict = {'emag': gdfc_emag}
+    return fun_dict[shop](html_card, searched_title)
+
+# ------------------------------------ EMAG -------------------------------
+
 def scan_emag_html(html_soup, product_name):
     product_data_list = []
     for html_card in html_soup.find_all('div', class_='card-item js-product-data'):
@@ -38,11 +44,9 @@ def scan_emag_html(html_soup, product_name):
     return product_data_list
 
 
-# Returns an instance of ProductData from a html
-# Returns None if the card is invalid
-def get_data_from_card(html_card, searched_title, shop='emag'):
-    fun_dict = {'emag': gdfc_emag}
-    return fun_dict[shop](html_card, searched_title)
+def ghfpp_emag(html_page):
+    print(html_page)
+    return 'haah'
 
 
 def gdfc_emag(html_card, searched_title):
