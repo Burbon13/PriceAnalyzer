@@ -20,3 +20,7 @@ class MongoDB:
     def save_one_history(self, history_obj):
         result = self.__price_history_table.insert_one(history_obj.__dict__)
         logging.info('History saved with id %s' % str(result.inserted_id))
+
+    def get_all_monitored_products(self):
+        logging.info('DB query to find all products')
+        return self.__product_table.find()

@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from Domain import ProductData
+from Domain import ProductData, PricesDTO
 from datetime import datetime
 from text_processing import verify_card_title, get_product_id
 
@@ -15,9 +15,12 @@ def get_plain_text(tag) -> str:
 # ----------------------------- HTML searches ----------------------------------------------------
 
 # Will return a history instance from a certain products page
-def get_history_from_product_page(html_page, shop='emag'):
+# Returns PricesDTO
+def get_history_from_product_page(html_data, shop='emag'):
+    html_soup = BeautifulSoup(html_data, 'html.parser')
     fun_dict = {'emag': ghfpp_emag}
-    return fun_dict[shop](html_page)
+    return fun_dict[shop](html_soup)
+    
 
 
 # Returns a ProductData list from an html search page
@@ -44,9 +47,12 @@ def scan_emag_html(html_soup, product_name):
     return product_data_list
 
 
-def ghfpp_emag(html_page):
-    print(html_page)
-    return 'haah'
+# returns PricesDTO
+def ghfpp_emag(html_soup):
+    html_found = html_soup.find('div', class_='product-highlight product-page-pricing')
+    old_price = get_plain_text(html_found.find('s'))
+    new_price = get_plain_text(html_found.find('p', class_='product-new-price'))
+    return PricesDTO(int(old_price), int(new_price))
 
 
 def gdfc_emag(html_card, searched_title):

@@ -48,3 +48,9 @@ class History:
                 'Old price: ' + str(self.old_price) + '\n' + \
                 'New price: ' + str(self.new_price) + '\n' + \
                 'Date: ' + str(self.date)
+
+
+class PricesDTO:
+    def __init__(self, old_price, new_price):
+        self.old_price = old_price
+        self.new_price = new_price

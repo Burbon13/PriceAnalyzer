@@ -1,11 +1,12 @@
 from url_generator import url_search_generator
 from shops_data import *
 from Domain import Product, History
-from html_processing import scan_html_for_products
+from html_processing import scan_html_for_products, get_history_from_product_page
 # from MongoDB import get_db_connection, get_db_table, save_one_to_table
 import requests
 from MongoDB import MongoDB
 import logging
+from datetime import datetime
 
 
 def save_to_db(product_data_list, mongo_db):
@@ -32,11 +33,24 @@ def scan(mongo_db):
         logging.critical(e)
 
 
+# for monitor checked products, the program will execute a price scan
+def monitor(mongo_db):
+    shop = 'emag'
+    logging.info('Monitoring scan initializing')
+    data = mongo_db.get_all_monitored_products()
+    for product in data:
+        response = requests.get(product['link'])
+        pricesDTO = get_history_from_product_page(response.content)
+        history = History(product['_id'], pricesDTO.old_price, pricesDTO.new_price, shop, datetime.now())
+        mongo_db.save_one_history(history)
+
+
 def main():
     logging.basicConfig(format='%(levelname)s|%(asctime)s|%(filename)s:%(funcName)s:%(lineno)d|%(message)s', level=logging.INFO)
     logging.info('Application started')
     mongo_db = MongoDB('price_manager')
-    scan(mongo_db)
+    # scan(mongo_db)
+    monitor(mongo_db)
 
 
 main()
