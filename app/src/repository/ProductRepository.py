@@ -33,5 +33,5 @@ class ProductMongoDbRepository:
     def get_all_products(self):
         products = []
         for x in self.__product_table.find():
-            products.append(Product(int(x['_id']), x['title'], x['link'], bool(x['monitored'])))
+            products.append(Product(int(x['_id']), x['title'], x['link'], image_link=x['image_link'], monitored=bool(x['monitored'])))
         return products

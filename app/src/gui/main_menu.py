@@ -30,7 +30,7 @@ class MenuWindow(Frame):
         # To close current window
         # self.master.withdraw()
         new_win = Toplevel(self)
-        controller = ProductsMenu(self.service, new_win)
+        ProductsMenu(self.service, new_win)
 
     def open_new_products(self):
         pass

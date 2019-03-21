@@ -15,12 +15,12 @@ def save_to_db(product_data_list, mongo_db):
     logging.info('Saving ProductDatas to DB')
     repo = ProductMongoDbRepository('price_manager')
     for item in product_data_list:
-        repo.save_one_product(Product(item.id, item.title, item.link))
+        repo.save_one_product(Product(item.id, item.title, item.link, item.image_link))
         repo.save_one_history(History(item.id, item.old_price, item.new_price, item.shop, item.date_time))
 
 
 def scan(mongo_db):
-    product_name = 'xiaomi'
+    product_name = 'iphone'
     product_category = shops['emag']['categories']['phones']
     shop = 'emag'
     url = url_search_generator(shop, product_category, product_name)
@@ -49,6 +49,9 @@ def monitor(mongo_db):
  
 
 def main():
+    # scan('ha')
+    # return
+
     repo = ProductMongoDbRepository('price_manager')
     service = ProductService(repo)
 

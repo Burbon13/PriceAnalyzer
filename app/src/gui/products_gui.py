@@ -1,4 +1,5 @@
 from tkinter import *
+from gui.examine_product import ExamineProduct
 
 class ProductsMenu:
     def __init__(self, service, top_level):
@@ -36,7 +37,7 @@ class ProductsMenu:
 
         self.products = self.service.find_all_products()
         for product in self.products:
-            listbox.insert(END, product)
+            listbox.insert(END, product.title)
 
         # Listbox listens to changes in the scrollbar to set its view position right
         scrollbar.config(command=listbox.yview)
@@ -44,4 +45,6 @@ class ProductsMenu:
     def on_product_select(self, evt):
         w = evt.widget
         index = int(w.curselection()[0])
-        print(self.products[index])
+
+        new_win = Toplevel(self.top_level)
+        ExamineProduct(self.service, self.products[index], new_win)

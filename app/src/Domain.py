@@ -1,5 +1,5 @@
 class ProductData:  
-    def __init__(self, title, old_price, new_price, product_id, link, date_time, shop='emag'):
+    def __init__(self, title, old_price, new_price, product_id, link, date_time, shop='emag', image_link='n/a'):
         self.shop = shop
         self.title = title
         self.old_price = old_price
@@ -7,6 +7,7 @@ class ProductData:
         self.id = product_id
         self.link = link
         self.date_time = date_time
+        self.image_link = image_link
 
     def __str__(self) -> str:
         return 'Title: ' + self.title + '\n' + \
@@ -24,10 +25,11 @@ class User:
 
 
 class Product:
-    def __init__(self, id, title, link, monitored=False):
+    def __init__(self, id, title, link, image_link=None, monitored=False):
         self._id = id
         self.title = title
         self.link = link
+        self.image_link = image_link
         self.monitored = monitored
 
     def __str__(self) -> str:
