@@ -6,18 +6,21 @@ from html_processing import scan_html_for_products, get_history_from_product_pag
 import requests
 import logging
 from datetime import datetime
-from tkinter import *
+from tkinter import Tk
 from gui.main_menu import MenuWindow
+from repository.ProductRepository import ProductMongoDbRepository
+from service.ProductService import ProductService
 
 def save_to_db(product_data_list, mongo_db):
     logging.info('Saving ProductDatas to DB')
+    repo = ProductMongoDbRepository('price_manager')
     for item in product_data_list:
-        mongo_db.save_one_product(Product(item.id, item.title, item.link))
-        mongo_db.save_one_history(History(item.id, item.old_price, item.new_price, item.shop, item.date_time))
+        repo.save_one_product(Product(item.id, item.title, item.link, item.image_link))
+        repo.save_one_history(History(item.id, item.old_price, item.new_price, item.shop, item.date_time))
 
 
 def scan(mongo_db):
-    product_name = 'motorola'
+    product_name = 'iphone'
     product_category = shops['emag']['categories']['phones']
     shop = 'emag'
     url = url_search_generator(shop, product_category, product_name)
@@ -46,18 +49,21 @@ def monitor(mongo_db):
  
 
 def main():
-    root = Tk()
-    root.geometry("400x300")
-    
-    app = MenuWindow(root)
-    root.mainloop()
+    # scan('ha')
+    # return
 
-    return
+    repo = ProductMongoDbRepository('price_manager')
+    service = ProductService(repo)
+
+    root = Tk()
+    root.geometry("500x400")
+    app = MenuWindow(service, master=root)
+    root.mainloop()
 
     # logging.basicConfig(format='%(levelname)s|%(asctime)s|%(filename)s:%(funcName)s:%(lineno)d|%(message)s', level=logging.INFO)
     # logging.info('Application started')
     # mongo_db = MongoDB('price_manager')
-    # scan(mongo_db)
+    # scan(4)
     # monitor(mongo_db)
 
 

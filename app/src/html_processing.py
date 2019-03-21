@@ -65,5 +65,6 @@ def gdfc_emag(html_card, searched_title):
     new_price = int(get_plain_text(html_card.find('p', class_='product-new-price')).replace('.',''))
     link_to_product = title['href']
     product_id = get_product_id(link_to_product)
-    product_data = ProductData(get_plain_text(title), old_price, new_price, product_id, link_to_product, datetime.now())
+    image_link = html_card.find('img', class_='lozad')['data-src']
+    product_data = ProductData(get_plain_text(title), old_price, new_price, product_id, link_to_product, datetime.now(), image_link=image_link)
     return product_data

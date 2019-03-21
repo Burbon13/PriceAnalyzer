@@ -2,9 +2,10 @@ from tkinter import *
 from gui.products_gui import ProductsMenu
 
 class MenuWindow(Frame):
-    def __init__(self, master=None):
+    def __init__(self, service, master=None):
         Frame.__init__(self, master)
-        self.master = master;
+        self.master = master
+        self.service = service
         self.init_window()
 
     def init_window(self):
@@ -29,7 +30,7 @@ class MenuWindow(Frame):
         # To close current window
         # self.master.withdraw()
         new_win = Toplevel(self)
-        controller = ProductsMenu(new_win)
+        ProductsMenu(self.service, new_win)
 
     def open_new_products(self):
         pass
