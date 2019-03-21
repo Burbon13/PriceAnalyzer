@@ -53,6 +53,8 @@ def main():
     # return
 
     repo = ProductMongoDbRepository('price_manager')
+    # monitor(repo)
+    # return
     service = ProductService(repo)
 
     root = Tk()

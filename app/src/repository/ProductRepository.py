@@ -35,3 +35,21 @@ class ProductMongoDbRepository:
         for x in self.__product_table.find():
             products.append(Product(int(x['_id']), x['title'], x['link'], image_link=x['image_link'], monitored=bool(x['monitored'])))
         return products
+
+    def get_min_price(self, product_id: int):
+        val = self.__price_history_table.aggregate([
+            { "$match" : { "product_id": product_id }},
+            { "$group": { "_id": "$product_id", "min_price": {"$min": "$new_price"} }}])
+
+        for price_obj in val:
+            return price_obj['min_price']
+
+        return -1
+
+    def get_current_price(self, product_id: int):
+        val = self.__price_history_table.find({'product_id' : product_id}).sort([('date', -1)]).limit(1)
+
+        for price_obj in val:
+            return price_obj['new_price']
+
+        return -1

@@ -13,3 +13,9 @@ class ProductService:
 
     def delete(self, *products):
         pass
+
+    def current_price(self, product_id: int):
+        return self.product_repo.get_current_price(product_id)
+
+    def lowest_price(self, product_id: int):
+        return self.product_repo.get_min_price(product_id)

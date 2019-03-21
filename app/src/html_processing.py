@@ -50,8 +50,8 @@ def scan_emag_html(html_soup, product_name):
 # returns PricesDTO
 def ghfpp_emag(html_soup):
     html_found = html_soup.find('div', class_='product-highlight product-page-pricing')
-    old_price = get_plain_text(html_found.find('s'))
-    new_price = get_plain_text(html_found.find('p', class_='product-new-price'))
+    old_price = get_plain_text(html_found.find('s')).replace('.', '')
+    new_price = get_plain_text(html_found.find('p', class_='product-new-price')).replace('.', '')
     return PricesDTO(int(old_price), int(new_price))
 
 
