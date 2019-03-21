@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 import logging
+from Domain import Product
 
 class ProductMongoDbRepository:
     def __init__(self, db_name):
@@ -28,3 +29,9 @@ class ProductMongoDbRepository:
         new_values = { "$set": { "monitored": to_monitor } }
         filter = {'_id' : product_id}
         self.__product_table.update_one(filter, new_values)
+
+    def get_all_products(self):
+        products = []
+        for x in self.__product_table.find():
+            products.append(Product(int(x['_id']), x['title'], x['link'], bool(x['monitored'])))
+        return products

@@ -1,9 +1,9 @@
 class ProductService:
-    def __init(self, product_repo):
+    def __init__(self, product_repo):
         self.product_repo = product_repo
     
-    def find_all(self):
-        pass
+    def find_all_products(self):
+        return self.product_repo.get_all_products()
 
     def save(self, *products):
         pass
