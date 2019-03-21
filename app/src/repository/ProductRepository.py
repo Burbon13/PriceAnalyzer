@@ -1,9 +1,7 @@
 from pymongo import MongoClient
 import logging
-# from ProductData import ProductData
-# from datetime import datetime
 
-class MongoDB:
+class ProductMongoDbRepository:
     def __init__(self, db_name):
         logging.info('Initializing DB connection with %s' % db_name)
         self.__db_name = db_name

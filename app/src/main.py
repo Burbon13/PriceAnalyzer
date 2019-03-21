@@ -4,10 +4,10 @@ from Domain import Product, History
 from html_processing import scan_html_for_products, get_history_from_product_page
 # from MongoDB import get_db_connection, get_db_table, save_one_to_table
 import requests
-from MongoDB import MongoDB
 import logging
 from datetime import datetime
-
+from tkinter import *
+from gui.main_menu import MenuWindow
 
 def save_to_db(product_data_list, mongo_db):
     logging.info('Saving ProductDatas to DB')
@@ -43,14 +43,22 @@ def monitor(mongo_db):
         pricesDTO = get_history_from_product_page(response.content)
         history = History(product['_id'], pricesDTO.old_price, pricesDTO.new_price, shop, datetime.now())
         mongo_db.save_one_history(history)
-
+ 
 
 def main():
-    logging.basicConfig(format='%(levelname)s|%(asctime)s|%(filename)s:%(funcName)s:%(lineno)d|%(message)s', level=logging.INFO)
-    logging.info('Application started')
-    mongo_db = MongoDB('price_manager')
+    root = Tk()
+    root.geometry("400x300")
+    
+    app = MenuWindow(root)
+    root.mainloop()
+
+    return
+
+    # logging.basicConfig(format='%(levelname)s|%(asctime)s|%(filename)s:%(funcName)s:%(lineno)d|%(message)s', level=logging.INFO)
+    # logging.info('Application started')
+    # mongo_db = MongoDB('price_manager')
     # scan(mongo_db)
-    monitor(mongo_db)
+    # monitor(mongo_db)
 
 
 main()
