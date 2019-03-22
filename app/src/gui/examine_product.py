@@ -89,4 +89,5 @@ class ExamineProduct:
             self.monitor_bu.configure(text = 'Turn off' if self.product.monitored else 'Turn on')
             self.monitor_label.configure(text = 'This device is being monitored' if self.product.monitored else 'This device is not being monitored')
             self.monitor_label.configure(fg = 'green' if self.product.monitored else 'red')
-    
+        else:
+            print('examine_product: update() event case not implemented')

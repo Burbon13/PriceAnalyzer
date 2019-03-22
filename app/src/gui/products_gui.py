@@ -55,6 +55,11 @@ class ProductsMenu:
         new_win = Toplevel(self.top_level)
         ex = ExamineProduct(self.service, self.products[index], new_win)
         self.service.add_observer(ex, Events.MONITORING)
+        new_win.protocol("WM_DELETE_WINDOW", lambda: self.destroy_examination(ex, new_win))
+
+    def destroy_examination(self, ex, new_win):
+        self.service.remove_observer(ex, Events.MONITORING)
+        new_win.destroy()
 
     def update(self, data, event):
         if event == Events.MONITORING:
