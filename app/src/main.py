@@ -38,16 +38,7 @@ def scan(mongo_db):
 
 
 # for monitor checked products, the program will execute a price scan
-def monitor(mongo_db):
-    shop = 'emag'
-    logging.info('Monitoring scan initializing')
-    data = mongo_db.get_all_monitored_products()
 
-    for product in data:
-        response = requests.get(product['link'])
-        pricesDTO = get_history_from_product_page(response.content)
-        history = History(product['_id'], pricesDTO.old_price, pricesDTO.new_price, shop, datetime.now())
-        mongo_db.save_one_history(history)
  
 
 def main():

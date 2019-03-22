@@ -29,6 +29,12 @@ class MenuWindow(Frame):
         new_bu.pack(fill=X, padx=10, pady=10)
 
         # Button for exiting the application
+        scan_bu = Button(self, text="Scan now", command=self.scan_my_products)
+        scan_bu.pack(fill=X, padx=10, pady=10)
+
+        settings_bu = Button(self, text="Settings")
+        settings_bu.pack(fill=X, padx=10, pady=10)
+
         exit_bu = Button(self, text="Quit", command=self.exit_program)
         exit_bu.pack(fill=X, padx=10, pady=10)
 
@@ -51,3 +57,6 @@ class MenuWindow(Frame):
 
     def exit_program(self):
         exit()
+
+    def scan_my_products(self):
+        self.service.monitor()

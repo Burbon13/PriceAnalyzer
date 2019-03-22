@@ -1,5 +1,11 @@
 from obs.Observable import Observable
 from obs.Events import Events
+import logging
+from text_processing import *
+from html_processing import get_history_from_product_page
+from Domain import History
+import requests
+from datetime import datetime
 
 class ProductService(Observable):
     def __init__(self, product_repo):
@@ -30,3 +36,14 @@ class ProductService(Observable):
     def set_monitoring_product(self, product_id, to_monitor=True):
         self.product_repo.set_monitoring_product(product_id, to_monitor)
         self.notify_observers((product_id, to_monitor), Events.MONITORING)
+
+    def monitor(self):
+        shop = 'emag'
+        logging.info('Monitoring scan initializing')
+        data = self.product_repo.get_all_monitored_products()
+
+        for product in data:
+            response = requests.get(product['link'])
+            pricesDTO = get_history_from_product_page(response.content)
+            history = History(product['_id'], pricesDTO.old_price, pricesDTO.new_price, shop, datetime.now())
+            self.product_repo.save_one_history(history)
