@@ -36,20 +36,27 @@ class ProductMongoDbRepository:
             products.append(Product(int(x['_id']), x['title'], x['link'], image_link=x['image_link'], monitored=bool(x['monitored'])))
         return products
 
+    # Returns a touple (price, date)
     def get_min_price(self, product_id: int):
-        val = self.__price_history_table.aggregate([
-            { "$match" : { "product_id": product_id }},
-            { "$group": { "_id": "$product_id", "min_price": {"$min": "$new_price"} }}])
+        # val = self.__price_history_table.aggregate([
+        #     { "$match" : { "product_id": product_id }},
+        #     { "$group": { "_id": "$product_id", "min_price": {"$min": "$new_price"} }}])
+        val = self.__price_history_table.find({'product_id' : product_id}).sort([('new_price', 1)]).limit(1)
 
         for price_obj in val:
-            return price_obj['min_price']
+            return (price_obj['new_price'], price_obj['date'])
 
-        return -1
+        return (-1,'n/a')
 
+    # Returns a touple (price, date)
     def get_current_price(self, product_id: int):
         val = self.__price_history_table.find({'product_id' : product_id}).sort([('date', -1)]).limit(1)
 
         for price_obj in val:
-            return price_obj['new_price']
+            return (price_obj['new_price'], price_obj['date'])
 
-        return -1
+        return (-1,'n/a')
+
+    # Returns a list of touples (date, price)
+    def get_all_history(self, product_id: int):
+        return [(h['date'], h['new_price']) for h in self.__price_history_table.find({'product_id' : product_id}).sort([('date', 1)])]

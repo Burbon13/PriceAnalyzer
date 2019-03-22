@@ -11,6 +11,7 @@ from gui.main_menu import MenuWindow
 from repository.ProductRepository import ProductMongoDbRepository
 from service.ProductService import ProductService
 
+
 def save_to_db(product_data_list, mongo_db):
     logging.info('Saving ProductDatas to DB')
     repo = ProductMongoDbRepository('price_manager')
@@ -41,6 +42,7 @@ def monitor(mongo_db):
     shop = 'emag'
     logging.info('Monitoring scan initializing')
     data = mongo_db.get_all_monitored_products()
+
     for product in data:
         response = requests.get(product['link'])
         pricesDTO = get_history_from_product_page(response.content)
@@ -49,9 +51,6 @@ def monitor(mongo_db):
  
 
 def main():
-    # scan('ha')
-    # return
-
     repo = ProductMongoDbRepository('price_manager')
     # monitor(repo)
     # return

@@ -19,3 +19,6 @@ class ProductService:
 
     def lowest_price(self, product_id: int):
         return self.product_repo.get_min_price(product_id)
+
+    def get_all_history(self, product_id: int):
+        return self.product_repo.get_all_history(product_id)

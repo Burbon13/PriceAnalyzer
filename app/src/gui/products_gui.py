@@ -36,8 +36,11 @@ class ProductsMenu:
         frame.pack(fill=BOTH, expand=1)   
 
         self.products = self.service.find_all_products()
-        for product in self.products:
+        for index, product in enumerate(self.products):
             listbox.insert(END, product.title)
+            listbox.itemconfig(index, foreground = 'green' if product.monitored else 'red')
+
+        # listbox.itemconfig(3, {'fg': 'blue'})
 
         # Listbox listens to changes in the scrollbar to set its view position right
         scrollbar.config(command=listbox.yview)
