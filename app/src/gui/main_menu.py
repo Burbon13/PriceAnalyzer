@@ -1,5 +1,6 @@
 from tkinter import *
 from gui.products_gui import ProductsMenu
+from obs.Events import Events
 
 class MenuWindow(Frame):
     def __init__(self, service, master=None):
@@ -30,7 +31,16 @@ class MenuWindow(Frame):
         # To close current window
         # self.master.withdraw()
         new_win = Toplevel(self)
-        ProductsMenu(self.service, new_win)
+        pm = ProductsMenu(self.service, new_win)
+        self.service.add_observer(pm, Events.MONITORING)
+
+        # !!!!!!!!!!!!!!!!!!
+        # aici ai ramas!!
+        # def on_closing():
+        #     if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        #     root.destroy()
+
+        # root.protocol("WM_DELETE_WINDOW", on_closing)
 
     def open_new_products(self):
         pass
