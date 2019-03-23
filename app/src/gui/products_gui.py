@@ -8,6 +8,7 @@ class ProductsMenu:
         self.top_level = top_level
         self.service = service
         self.products = []
+        self.products_id = set()
         self.listbox = None
         self.init_gui()
 
@@ -41,7 +42,8 @@ class ProductsMenu:
         self.products = self.service.find_all_products()
         for index, product in enumerate(self.products):
             self.listbox.insert(END, product.title)
-            self.listbox.itemconfig(index, foreground = 'green' if product.monitored else 'red')
+            self.listbox.itemconfig(END, foreground = 'green' if product.monitored else 'red')
+            self.products_id.add(product._id)
 
         # listbox.itemconfig(3, {'fg': 'blue'})
 
@@ -65,3 +67,10 @@ class ProductsMenu:
         if event == Events.MONITORING:
             index = next(i for i,v in enumerate(self.products) if v._id == data[0])
             self.listbox.itemconfig(index, foreground = 'green' if data[1] else 'red')
+        elif event == Events.NEW_P:
+            id_p = data
+            if id_p not in self.products_id:
+                product = self.service.find_product(id_p)
+                self.products.append(product)
+                self.listbox.insert(END, product.title)
+                self.listbox.itemconfig(END, foreground='green' if product.monitored else 'red')

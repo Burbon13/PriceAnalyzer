@@ -73,3 +73,6 @@ class ProductService(Observable):
 
     def product_already_exists(self, product_id):
         return self.product_repo.find_product(product_id) is not None
+
+    def find_product(self, product_id):
+        return self.product_repo.find_product(product_id)

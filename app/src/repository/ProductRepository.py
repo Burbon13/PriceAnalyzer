@@ -20,11 +20,6 @@ class ProductMongoDbRepository:
         result = self.__price_history_table.insert_one(history_obj.__dict__)
         logging.info('History saved with id %s' % str(result.inserted_id))
 
-    def get_all_monitored_products(self):
-        logging.info('DB query to find all products')
-        filter = {'monitored' : True}
-        return self.__product_table.find(filter)
-
     def set_monitoring_product(self, product_id, to_monitor=True):
         new_values = { "$set": { "monitored": to_monitor } }
         filter = {'_id' : product_id}
@@ -62,4 +57,7 @@ class ProductMongoDbRepository:
         return [(h['date'], h['new_price']) for h in self.__price_history_table.find({'product_id' : product_id}).sort([('date', 1)])]
 
     def find_product(self, product_id: int):
-        return self.__product_table.find_one({'_id': product_id})
+        x = self.__product_table.find_one({'_id': product_id})
+        if x is None:
+            return None
+        return Product(int(x['_id']), x['title'], x['link'], image_link=x['image_link'], monitored=bool(x['monitored']))
