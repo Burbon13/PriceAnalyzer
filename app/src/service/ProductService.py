@@ -16,14 +16,18 @@ class ProductService(Observable):
     def __init__(self, product_repo):
         Observable.__init__(self)
         self.product_repo = product_repo
-    
+
     def find_all_products(self):
         return self.product_repo.get_all_products()
 
     def save_products(self, *products):
         for item in products:
-            self.product_repo.save_one_product(Product(item.id, item.title, item.link, item.image_link, monitored=True))
-            self.product_repo.save_one_history(History(item.id, item.old_price, item.new_price, item.shop, item.date_time))
+            self.product_repo.save_one_product(Product(item.id, item.title, item.link,
+                                                       item.new_price, item.new_price,
+                                                       item.date_time, item.date_time,
+                                                       image_link=item.image_link, monitored=True))
+            self.product_repo.save_one_history(
+                History(item.id, item.old_price, item.new_price, item.shop, item.date_time))
             self.notify_observers(item.id, Events.NEW_P)
 
     def delete(self, *products):
@@ -53,6 +57,8 @@ class ProductService(Observable):
             history = History(product['_id'], pricesDTO.old_price, pricesDTO.new_price, shop, datetime.now())
             self.product_repo.save_one_history(history)
 
+        self.notify_observers(None, Events.SCAN)
+
     def search_products(self, product_name, category, shop):
         # product_name = 'iphone'
         product_category = shops[shop]['categories'][category]
@@ -65,7 +71,7 @@ class ProductService(Observable):
             logging.info('Http request response status code %d' % response.status_code)
             html_data = response.content
             product_data_list = scan_html_for_products(html_data, shop, product_name)
-            #save_to_db(product_data_list, mongo_db)
+            # save_to_db(product_data_list, mongo_db)
             return product_data_list
         except ConnectionError as e:
             logging.critical(e)

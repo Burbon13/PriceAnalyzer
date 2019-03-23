@@ -25,12 +25,18 @@ class User:
 
 
 class Product:
-    def __init__(self, id, title, link, image_link=None, monitored=False):
+    def __init__(self, id, title, link, best_price,
+                 current_price, best_price_date, current_price_date,
+                 image_link=None, monitored=False):
         self._id = id
         self.title = title
         self.link = link
         self.image_link = image_link
         self.monitored = monitored
+        self.best_price = best_price
+        self.current_price = current_price
+        self.best_price_date = best_price_date
+        self.current_price_date = current_price_date
 
     def __str__(self) -> str:
         return 'Id: ' + str(self._id) + '\n' + \
