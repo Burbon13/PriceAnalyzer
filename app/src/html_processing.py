@@ -26,14 +26,14 @@ def get_history_from_product_page(html_data, shop='emag'):
 # Returns a ProductData list from an html search page
 def scan_html_for_products(html_data, shop, product_name):
     html_soup = BeautifulSoup(html_data, 'html.parser')
-    fun_dict = {'emag': scan_emag_html}
+    fun_dict = {'Emag': scan_emag_html}
     return fun_dict[shop](html_soup, product_name)
 
 
 # Returns an instance of ProductData from a html
 # Returns None if the card is invalid
-def get_data_from_card(html_card, searched_title, shop='emag'):
-    fun_dict = {'emag': gdfc_emag}
+def get_data_from_card(html_card, searched_title, shop='Emag'):
+    fun_dict = {'Emag': gdfc_emag}
     return fun_dict[shop](html_card, searched_title)
 
 # ------------------------------------ EMAG -------------------------------

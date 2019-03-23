@@ -36,7 +36,7 @@ class ProductsMenu:
         #        - if the parent widget is made larger, hold everything packed, any exceeding space
         #          will be distributed among all widgets that have expand option set to a non-zero value                   
         self.listbox.pack(fill=BOTH, expand=1)
-        frame.pack(fill=BOTH, expand=1)   
+        frame.pack(fill=BOTH, expand=1)
 
         self.products = self.service.find_all_products()
         for index, product in enumerate(self.products):

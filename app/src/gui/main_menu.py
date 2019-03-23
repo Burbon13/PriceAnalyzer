@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
+
+from gui.add_products import AddProducts
 from gui.products_gui import ProductsMenu
 from obs.Events import Events
 
@@ -11,6 +13,9 @@ class MenuWindow(Frame):
         # All products menu
         self.new_win_prod = None
         self.products_menu = None
+        # New products menu
+        self.new_products_window = None
+        self.new_products_controller = None
 
         self.init_window()
 
@@ -53,7 +58,10 @@ class MenuWindow(Frame):
         self.new_win_prod = None
 
     def open_new_products(self):
-        pass
+        
+        self.new_products_window = Toplevel(self)
+        self.new_products_controller = AddProducts(self.service, self.new_products_window)
+
 
     def exit_program(self):
         exit()

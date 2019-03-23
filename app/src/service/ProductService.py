@@ -1,11 +1,16 @@
 from obs.Observable import Observable
 from obs.Events import Events
 import logging
+
+from shops_data import shops
 from text_processing import *
-from html_processing import get_history_from_product_page
+from html_processing import get_history_from_product_page, scan_html_for_products
 from Domain import History
 import requests
 from datetime import datetime
+
+from url_generator import url_search_generator
+
 
 class ProductService(Observable):
     def __init__(self, product_repo):
@@ -47,3 +52,24 @@ class ProductService(Observable):
             pricesDTO = get_history_from_product_page(response.content)
             history = History(product['_id'], pricesDTO.old_price, pricesDTO.new_price, shop, datetime.now())
             self.product_repo.save_one_history(history)
+
+    def search_products(self, product_name, category, shop):
+        # product_name = 'iphone'
+        product_category = shops[shop]['categories'][category]
+        # shop = 'emag'
+        url = url_search_generator(shop, product_category, product_name)
+
+        try:
+            logging.info('Sending http request')
+            response = requests.get(url)
+            logging.info('Http request response status code %d' % response.status_code)
+            html_data = response.content
+            product_data_list = scan_html_for_products(html_data, shop, product_name)
+            #save_to_db(product_data_list, mongo_db)
+            return product_data_list
+        except ConnectionError as e:
+            logging.critical(e)
+        return None
+
+    def product_already_exists(self, product_id):
+        return self.product_repo.find_product(product_id) is not None

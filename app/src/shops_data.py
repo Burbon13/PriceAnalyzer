@@ -1,14 +1,21 @@
 shops = {
-    'emag' : {
+    'Emag' : {
         'link': 'https://www.emag.ro',
         'categories': {
+            'Laptops': 'laptopuri',
             'laptops': 'laptopuri',
+            'Phones': 'telefoane-mobile',
             'phones': 'telefoane-mobile',
+            'Tablets': 'tablete',
             'tablets': 'tablete',
-            'tvs': 'televizoare',
-            'portable-speakers': 'boxe-portabile',
+            'Tvs': 'televizoare',
+            'Portable speakers': 'boxe-portabile',
+            'Portable Speakers': 'boxe-portabile',
+            'portable speakers': 'boxe-portabile',
+            'Headphones': 'casti-audio',
             'headphones': 'casti-audio',
-            'console': 'console-hardware'
+            'Consoles': 'console-hardware',
+            'consoles': 'console-hardware'
         }
     }
 }

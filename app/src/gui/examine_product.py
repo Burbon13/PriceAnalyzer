@@ -84,10 +84,11 @@ class ExamineProduct:
         webbrowser.open_new(self.product.link)
 
     def update(self, data, event):
-        if event == Events.MONITORING and data[0] == self.product._id:
-            self.product.monitored = data[1]
-            self.monitor_bu.configure(text = 'Turn off' if self.product.monitored else 'Turn on')
-            self.monitor_label.configure(text = 'This device is being monitored' if self.product.monitored else 'This device is not being monitored')
-            self.monitor_label.configure(fg = 'green' if self.product.monitored else 'red')
+        if event == Events.MONITORING:
+            if data[0] == self.product._id:
+                self.product.monitored = data[1]
+                self.monitor_bu.configure(text = 'Turn off' if self.product.monitored else 'Turn on')
+                self.monitor_label.configure(text = 'This device is being monitored' if self.product.monitored else 'This device is not being monitored')
+                self.monitor_label.configure(fg = 'green' if self.product.monitored else 'red')
         else:
-            print('examine_product: update() event case not implemented')
+            print('examine_product: update() event case not implemented (ma')
