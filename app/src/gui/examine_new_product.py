@@ -12,7 +12,8 @@ class ExamineNewProduct:
         self.top_level = top_level
         self.service = service
         self.product = product
-        self.imf = None
+        self.mem_image = None
+        self.bin_img = None
         self.already_exists = self.service.product_already_exists(self.product.id)
         # GUI elements
         self.add_bu = None
@@ -29,8 +30,9 @@ class ExamineNewProduct:
         link_label.bind('<Button-1>', self.open_browser)
 
         response = requests.get(self.product.image_link)
+        self.bin_img = response.content
 
-        self.mem_image = ImageTk.PhotoImage(Image.open(BytesIO(self.img_response.content)).resize((150, 150)))
+        self.mem_image = ImageTk.PhotoImage(Image.open(BytesIO(self.bin_img)).resize((150, 150)))
         panel = Label(self.top_level, image=self.mem_image)
         panel.grid(row=1, column=0, rowspan=2, sticky=N + S + W + E)
 
@@ -48,7 +50,7 @@ class ExamineNewProduct:
             Grid.columnconfigure(self.top_level, x, weight=1)
 
     def add_product(self):
-        self.service.save_products(self.product)
+        self.service.save_products((self.product, self.bin_img))
 
     def open_browser(self, event):
         webbrowser.open_new(self.product.link)

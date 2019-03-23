@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import logging
-from Domain import Product
+from Domain import Product, Avatar
 
 
 class ProductMongoDbRepository:
@@ -11,11 +11,17 @@ class ProductMongoDbRepository:
         logging.info('Initializing tables connections')
         self.__product_table = self.__db_connection['product']
         self.__price_history_table = self.__db_connection['price_history']
+        self.__avatar_table = self.__db_connection['avatar']
         logging.info('DB connection succeeded')
 
-    def save_one_product(self, product_obj):
-        result = self.__product_table.insert_one(product_obj.__dict__)
-        logging.info('Product saved with id %d' % result.inserted_id)
+    # TODO: Make transactional
+    def save_one_product(self, product_obj, bin_img):
+        self.__product_table.insert_one(product_obj.__dict__)
+        avatar = Avatar(bin_img, product_obj._id)
+        self.__avatar_table.insert_one(avatar.__dict__)
+
+    def get_image(self, product_id):
+        return self.__avatar_table.find_one({'product_id': product_id})['img_data']
 
     def save_one_history(self, history_obj):
         self.__price_history_table.insert_one(history_obj.__dict__)

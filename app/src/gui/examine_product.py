@@ -1,7 +1,6 @@
 from tkinter import Label, PhotoImage, Button, LEFT, BOTH, Grid
 import webbrowser
 from PIL import Image, ImageTk
-import requests
 from io import BytesIO
 from pandas import DataFrame
 import matplotlib.pyplot as plt
@@ -31,8 +30,7 @@ class ExamineProduct:
         link_label.grid(row=1, column=0, columnspan=2)
         link_label.bind('<Button-1>', self.open_browser)
 
-        # TODO: Save image in mongoDB
-        response=requests.get(self.product.image_link)
+        img_data = self.service.get_image(self.product._id)
 
         self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((150, 150)))
         panel = Label(self.top_level, image=self.img)
