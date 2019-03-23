@@ -52,7 +52,12 @@ class ProductMongoDbRepository:
 
         return (-1,'n/a')
 
-    # Returns a list of touples (date, price)
+    def get_all_monitored_products(self):
+        logging.info('DB query to find all products')
+        filter = {'monitored': True}
+        return self.__product_table.find(filter)
+
+        # Returns a list of touples (date, price)
     def get_all_history(self, product_id: int):
         return [(h['date'], h['new_price']) for h in self.__price_history_table.find({'product_id' : product_id}).sort([('date', 1)])]
 
