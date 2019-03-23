@@ -1,5 +1,5 @@
 shops = {
-    'Emag' : {
+    'Emag': {
         'link': 'https://www.emag.ro',
         'categories': {
             'Laptops': 'laptopuri',

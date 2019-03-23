@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import logging
-from Domain import Product, Avatar
+from Domain import Product
 
 
 class ProductMongoDbRepository:
@@ -11,13 +11,10 @@ class ProductMongoDbRepository:
         logging.info('Initializing tables connections')
         self.__product_table = self.__db_connection['product']
         self.__price_history_table = self.__db_connection['price_history']
-        self.__avatar_table = self.__db_connection['avatar']
         logging.info('DB connection succeeded')
 
-    def save_one_product(self, product_obj, image_b):
+    def save_one_product(self, product_obj):
         result = self.__product_table.insert_one(product_obj.__dict__)
-        avatar = Avatar(image_b, product_obj._id)
-        self.__avatar_table.insert(avatar.__dict__)
         logging.info('Product saved with id %d' % result.inserted_id)
 
     def save_one_history(self, history_obj):
@@ -83,8 +80,5 @@ class ProductMongoDbRepository:
         if x is None:
             return None
         return Product(int(x['_id']), x['title'], x['link'],
-                x['best_price'], x['current_price'], x['best_price_date'], x['current_price_date'],
-               image_link=x['image_link'], monitored=bool(x['monitored']))
-
-    def get_image(self, product_id: int):
-        return self.__avatar_table.find_one({'product_id': product_id})['img_data']
+                       x['best_price'], x['current_price'], x['best_price_date'], x['current_price_date'],
+                       image_link=x['image_link'], monitored=bool(x['monitored']))

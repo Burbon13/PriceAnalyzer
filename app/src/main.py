@@ -8,6 +8,7 @@ from gui.main_menu import MenuWindow
 
 from datetime import datetime
 
+
 def main():
     # logging.basicConfig(format='%(levelname)s|%(asctime)s|%(filename)s:%(funcName)s:%(lineno)d|%(message)s', level=logging.INFO)
     # logging.info('Application started')

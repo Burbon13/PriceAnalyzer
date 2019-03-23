@@ -21,12 +21,11 @@ class ProductService(Observable):
         return self.product_repo.get_all_products()
 
     def save_products(self, *products):
-        for p in products:
-            item = p[0]
+        for item in products:
             self.product_repo.save_one_product(Product(item.id, item.title, item.link,
                                                        item.new_price, item.new_price,
                                                        item.date_time, item.date_time,
-                                                       image_link=item.image_link, monitored=True), p[1])
+                                                       image_link=item.image_link, monitored=True))
             self.product_repo.save_one_history(
                 History(item.id, item.old_price, item.new_price, item.shop, item.date_time))
             self.notify_observers(item.id, Events.NEW_P)
@@ -83,6 +82,3 @@ class ProductService(Observable):
 
     def find_product(self, product_id):
         return self.product_repo.find_product(product_id)
-
-    def get_image(self, product_id):
-        return self.product_repo.get_image(product_id)

@@ -1,13 +1,14 @@
 from abc import abstractmethod
 from obs.Events import Events
 
+
 class Observable:
     def __init__(self):
         self.observers = {
-            Events.MONITORING : [],
-            Events.NEW_P : [],
-            Events.DEL_P : [],
-            Events.SCAN : []
+            Events.MONITORING: [],
+            Events.NEW_P: [],
+            Events.DEL_P: [],
+            Events.SCAN: []
         }
         self.print_stats()
 

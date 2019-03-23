@@ -26,6 +26,6 @@ def verify_card_title(title, given_title) -> bool:
 
 # Returns the product id from an emag link
 def get_product_id(link_to_product) -> int:
-    s_matched =  RegexCompiles.re_compile_product_id.search(link_to_product).group()
+    s_matched = RegexCompiles.re_compile_product_id.search(link_to_product).group()
     id_matched = RegexCompiles.re_compile_id.search(s_matched).group()
     return int(id_matched)

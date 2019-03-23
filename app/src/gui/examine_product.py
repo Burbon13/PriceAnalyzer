@@ -1,11 +1,13 @@
 from tkinter import Label, PhotoImage, Button, LEFT, BOTH, Grid
 import webbrowser
 from PIL import Image, ImageTk
+import requests
 from io import BytesIO
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from obs.Events import Events
+
 
 class ExamineProduct:
     def __init__(self, service, product, top_level):
@@ -29,9 +31,10 @@ class ExamineProduct:
         link_label.grid(row=1, column=0, columnspan=2)
         link_label.bind('<Button-1>', self.open_browser)
 
-        img_data = self.service.get_image(self.product._id)
+        # TODO: Save image in mongoDB
+        response=requests.get(self.product.image_link)
 
-        self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((150,150)))
+        self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)).resize((150, 150)))
         panel = Label(self.top_level, image=self.img)
         panel.grid(row=2, column=0, rowspan=2)
 
@@ -53,15 +56,12 @@ class ExamineProduct:
 
         self.set_price_plot()
 
-
-
         Button(self.top_level, text='Remove product').grid(row=6, column=0, columnspan=2)
 
         for x in range(7):
             Grid.rowconfigure(self.top_level, x, weight=1)
         for x in range(2):
             Grid.columnconfigure(self.top_level, x, weight=1)
-
 
     def set_price_plot(self):
         if self.figure is not None:
@@ -86,26 +86,29 @@ class ExamineProduct:
 
     def set_monitoring(self):
         self.service.set_monitoring_product(self.product._id, not self.product.monitored)
-    
+
     def open_browser(self, event):
         webbrowser.open_new(self.product.link)
 
     def set_price_labels(self):
         current_price = self.product.current_price
-        current_price_str = str(current_price) + '  (' + str(self.product.current_price_date.strftime("%Y-%m-%d %H:%M:%S")) + ')' if current_price != -1 else 'No data record'
+        current_price_str = str(current_price) + '  (' + str(self.product.current_price_date.strftime(
+            "%Y-%m-%d %H:%M:%S")) + ')' if current_price != -1 else 'No data record'
         self.current_price_label.config(text=current_price_str)
 
         lowest_price = self.product.best_price
-        lowest_price_str = str(lowest_price) + '  (' + str(self.product.best_price_date.strftime("%Y-%m-%d %H:%M:%S")) + ')' if lowest_price != -1 else 'No data record'
+        lowest_price_str = str(lowest_price) + '  (' + str(self.product.best_price_date.strftime(
+            "%Y-%m-%d %H:%M:%S")) + ')' if lowest_price != -1 else 'No data record'
         self.best_price_label.config(text=lowest_price_str)
 
     def update(self, data, event):
         if event == Events.MONITORING:
             if data[0] == self.product._id:
                 self.product.monitored = data[1]
-                self.monitor_bu.configure(text = 'Turn off' if self.product.monitored else 'Turn on')
-                self.monitor_label.configure(text = 'This device is being monitored' if self.product.monitored else 'This device is not being monitored')
-                self.monitor_label.configure(fg = 'green' if self.product.monitored else 'red')
+                self.monitor_bu.configure(text='Turn off' if self.product.monitored else 'Turn on')
+                self.monitor_label.configure(
+                    text='This device is being monitored' if self.product.monitored else 'This device is not being monitored')
+                self.monitor_label.configure(fg='green' if self.product.monitored else 'red')
         elif event == Events.SCAN:
             if self.product.monitored:
                 self.product = self.service.find_product(self.product._id)

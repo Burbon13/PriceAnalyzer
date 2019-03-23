@@ -3,6 +3,7 @@ from gui.examine_product import ExamineProduct
 from obs.Events import Events
 from Domain import Product
 
+
 class ProductsMenu:
     def __init__(self, service, top_level):
         self.top_level = top_level
@@ -27,7 +28,7 @@ class ProductsMenu:
 
         # Scrollbar listent to changes in the listbox to set it's position correctly
         self.listbox = Listbox(frame, bd=0, yscrollcommand=scrollbar.set)
-        
+
         # Bind double click event to the listbox
         self.listbox.bind('<Double-Button-1>', self.on_product_select)
         self.listbox.bind('<Return>', self.on_product_select)
@@ -42,7 +43,7 @@ class ProductsMenu:
         self.products = self.service.find_all_products()
         for index, product in enumerate(self.products):
             self.listbox.insert(END, product.title)
-            self.listbox.itemconfig(END, foreground = 'green' if product.monitored else 'red')
+            self.listbox.itemconfig(END, foreground='green' if product.monitored else 'red')
             self.products_id.add(product._id)
 
         # listbox.itemconfig(3, {'fg': 'blue'})
@@ -65,8 +66,8 @@ class ProductsMenu:
 
     def update(self, data, event):
         if event == Events.MONITORING:
-            index = next(i for i,v in enumerate(self.products) if v._id == data[0])
-            self.listbox.itemconfig(index, foreground = 'green' if data[1] else 'red')
+            index = next(i for i, v in enumerate(self.products) if v._id == data[0])
+            self.listbox.itemconfig(index, foreground='green' if data[1] else 'red')
         elif event == Events.NEW_P:
             id_p = data
             if id_p not in self.products_id:

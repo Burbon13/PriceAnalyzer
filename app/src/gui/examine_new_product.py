@@ -12,8 +12,7 @@ class ExamineNewProduct:
         self.top_level = top_level
         self.service = service
         self.product = product
-        self.img_response = None
-        self.mem_image = None
+        self.imf = None
         self.already_exists = self.service.product_already_exists(self.product.id)
         # GUI elements
         self.add_bu = None
@@ -21,18 +20,19 @@ class ExamineNewProduct:
 
     def init_gui(self):
         self.top_level.geometry("400x450")
-        Message(self.top_level, text=self.product.title, width=380).grid(row=0, column=0, columnspan=2, sticky=N+S+W+E)
+        Message(self.top_level, text=self.product.title, width=380).grid(row=0, column=0, columnspan=2,
+                                                                         sticky=N + S + W + E)
 
         # May want to customize in near future
         link_label = Label(self.top_level, text="Emag - Link to shop", fg="blue", cursor="hand2")
-        link_label.grid(row=1, column=1, sticky=N+S+W+E)
+        link_label.grid(row=1, column=1, sticky=N + S + W + E)
         link_label.bind('<Button-1>', self.open_browser)
 
-        self.img_response = requests.get(self.product.image_link)
+        response = requests.get(self.product.image_link)
 
         self.mem_image = ImageTk.PhotoImage(Image.open(BytesIO(self.img_response.content)).resize((150, 150)))
         panel = Label(self.top_level, image=self.mem_image)
-        panel.grid(row=1, column=0, rowspan=2, sticky=N+S+W+E)
+        panel.grid(row=1, column=0, rowspan=2, sticky=N + S + W + E)
 
         Label(self.top_level, text='Current price: ' + str(self.product.new_price)).grid(row=2, column=1)
 
@@ -48,7 +48,7 @@ class ExamineNewProduct:
             Grid.columnconfigure(self.top_level, x, weight=1)
 
     def add_product(self):
-        self.service.save_products((self.product, self.img_response.content))
+        self.service.save_products(self.product)
 
     def open_browser(self, event):
         webbrowser.open_new(self.product.link)

@@ -5,6 +5,7 @@ from gui.add_products import AddProducts
 from gui.products_gui import ProductsMenu
 from obs.Events import Events
 
+
 class MenuWindow(Frame):
     def __init__(self, service, master=None):
         Frame.__init__(self, master)
@@ -61,7 +62,7 @@ class MenuWindow(Frame):
     def open_new_products_window(self):
         if self.new_products_window is not None:
             return
-        
+
         self.new_products_window = Toplevel(self)
         self.new_products_controller = AddProducts(self.service, self.new_products_window)
         self.service.add_observer(self.new_products_controller, Events.NEW_P)

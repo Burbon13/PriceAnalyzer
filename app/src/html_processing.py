@@ -3,13 +3,14 @@ from Domain import ProductData, PricesDTO
 from datetime import datetime
 from text_processing import verify_card_title, get_product_id
 
+
 # ---------------------------- HTML utils ----------------------------------------------------
 
 # Returns the text from 1'st level depth of a html tag
 def get_plain_text(tag) -> str:
     if tag is None:
         return '-1'
-    return  ''.join(x.strip() + ' ' for x in tag.find_all(text=True, recursive=False)).strip()
+    return ''.join(x.strip() + ' ' for x in tag.find_all(text=True, recursive=False)).strip()
 
 
 # ----------------------------- HTML searches ----------------------------------------------------
@@ -20,7 +21,6 @@ def get_history_from_product_page(html_data, shop='emag'):
     html_soup = BeautifulSoup(html_data, 'html.parser')
     fun_dict = {'emag': ghfpp_emag}
     return fun_dict[shop](html_soup)
-    
 
 
 # Returns a ProductData list from an html search page
@@ -36,14 +36,15 @@ def get_data_from_card(html_card, searched_title, shop='Emag'):
     fun_dict = {'Emag': gdfc_emag}
     return fun_dict[shop](html_card, searched_title)
 
+
 # ------------------------------------ EMAG -------------------------------
 
 def scan_emag_html(html_soup, product_name):
     product_data_list = []
     for html_card in html_soup.find_all('div', class_='card-item js-product-data'):
-            data = get_data_from_card(html_card, product_name)
-            if data:
-                product_data_list.append(data)
+        data = get_data_from_card(html_card, product_name)
+        if data:
+            product_data_list.append(data)
     return product_data_list
 
 
@@ -61,10 +62,11 @@ def gdfc_emag(html_card, searched_title):
     if not verify_card_title(get_plain_text(title), searched_title):
         return None
 
-    old_price = int(get_plain_text(html_card.find('p', class_='product-old-price').find('s')).replace('.',''))
-    new_price = int(get_plain_text(html_card.find('p', class_='product-new-price')).replace('.',''))
+    old_price = int(get_plain_text(html_card.find('p', class_='product-old-price').find('s')).replace('.', ''))
+    new_price = int(get_plain_text(html_card.find('p', class_='product-new-price')).replace('.', ''))
     link_to_product = title['href']
     product_id = get_product_id(link_to_product)
     image_link = html_card.find('img', class_='lozad')['data-src']
-    product_data = ProductData(get_plain_text(title), old_price, new_price, product_id, link_to_product, datetime.now(), image_link=image_link)
+    product_data = ProductData(get_plain_text(title), old_price, new_price, product_id, link_to_product, datetime.now(),
+                               image_link=image_link)
     return product_data
