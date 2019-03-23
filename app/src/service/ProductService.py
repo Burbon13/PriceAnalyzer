@@ -5,7 +5,7 @@ import logging
 from shops_data import shops
 from text_processing import *
 from html_processing import get_history_from_product_page, scan_html_for_products
-from Domain import History
+from Domain import History, Product
 import requests
 from datetime import datetime
 
@@ -20,11 +20,11 @@ class ProductService(Observable):
     def find_all_products(self):
         return self.product_repo.get_all_products()
 
-    def save(self, *products):
-        pass
-
-    def set_monitoring(self, product, state: bool):
-        pass
+    def save_products(self, *products):
+        for item in products:
+            self.product_repo.save_one_product(Product(item.id, item.title, item.link, item.image_link, monitored=True))
+            self.product_repo.save_one_history(History(item.id, item.old_price, item.new_price, item.shop, item.date_time))
+            self.notify_observers(item.id, Events.NEW_P)
 
     def delete(self, *products):
         pass

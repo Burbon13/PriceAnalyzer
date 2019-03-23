@@ -56,12 +56,15 @@ class ExamineProduct:
         history = self.service.get_all_history(self.product._id)
 
         if len(history) > 0:
+            # Pandas part
             Data2 = {'Date': [h[0] for h in history],'Price': [h[1] for h in history]}
             df2 = DataFrame(Data2,columns=['Date','Price'])
             df2 = df2[['Date', 'Price']].groupby('Date').sum()
-            
+
+        # Plotting part
         figure2 = plt.Figure(figsize=(5,4), dpi=100)
         ax2 = figure2.add_subplot(111)
+        # Tkinter widget
         line2 = FigureCanvasTkAgg(figure2, self.top_level)
         line2.get_tk_widget().grid(row=5, column=0, columnspan=2)
         

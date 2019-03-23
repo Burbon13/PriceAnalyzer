@@ -2,6 +2,7 @@ from tkinter import Entry, Frame, Scrollbar, RIGHT, Listbox, BOTH, SUNKEN, Y, EN
 from tkinter.ttk import Combobox
 
 from gui.examine_new_product import ExamineNewProduct
+from obs.Events import Events
 
 
 class AddProducts:
@@ -15,7 +16,9 @@ class AddProducts:
         self.search_button = None
         self.listbox = None
         # Last searched products list
-        self.products_found = None
+        self.products_found = None  # List
+        self.products_found_positions = None  # Dictionary
+        self.existing = None  # Set
         self.init_gui()
 
     def init_gui(self):
@@ -70,21 +73,31 @@ class AddProducts:
 
         new_win = Toplevel(self.top_level)
         ex = ExamineNewProduct(self.service, self.products_found[index], new_win)
-        # TODO: Add observeersssssss!
-        # self.service.add_observer(ex, Events.MONITORING)
-        # new_win.protocol("WM_DELETE_WINDOW", lambda: self.destroy_examination(ex, new_win))
+
+        self.service.add_observer(ex, Events.NEW_P)
+        new_win.protocol("WM_DELETE_WINDOW", lambda: self.destroy_examination(ex, new_win))
 
     def destroy_examination(self, ex, new_win):
-        # self.service.remove_observer(ex, Events.MONITORING)
-        # new_win.destroy()
-        pass
+        self.service.remove_observer(ex, Events.NEW_P)
+        new_win.destroy()
 
     def on_search_event(self):
         self.products_found = self.service.search_products(self.name_entry.get(), self.category_combo.get(), 'Emag')
         if self.products_found is None:
             return
         self.listbox.delete(0, 'end')
+        self.products_found_positions = {}
+        self.existing = set()
         for index, product in enumerate(self.products_found):
             self.listbox.insert(END, product.title)
+            self.products_found_positions[product.id] = index
             if self.service.product_already_exists(product.id):
+                self.listbox.itemconfig(index, foreground='orange')
+                self.existing.add(product.id)
+
+    def update(self, data, event):
+        if event == Events.NEW_P:
+            id = data
+            if self.products_found_positions is not None and id in self.products_found_positions:
+                index = self.products_found_positions[id]
                 self.listbox.itemconfig(index, foreground='orange')

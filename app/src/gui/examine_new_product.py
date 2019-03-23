@@ -2,7 +2,9 @@ import requests
 import webbrowser
 from PIL import ImageTk, Image
 from six import BytesIO
-from tkinter import Label, Button, Message, Grid, E, W, S, N
+from tkinter import Label, Button, Message, Grid, E, W, S, N, DISABLED
+
+from obs.Events import Events
 
 
 class ExamineNewProduct:
@@ -11,6 +13,9 @@ class ExamineNewProduct:
         self.service = service
         self.product = product
         self.imf = None
+        self.already_exists = self.service.product_already_exists(self.product.id)
+        # GUI elements
+        self.add_bu = None
         self.init_gui()
 
     def init_gui(self):
@@ -31,8 +36,10 @@ class ExamineNewProduct:
         Label(self.top_level, text='Current price: ' + str(self.product.new_price)).grid(row=2, column=1)
 
         text_bu = 'Add'
-        add_bu = Button(self.top_level, text=text_bu, command=self.add_product)
-        add_bu.grid(row=3, column=0, columnspan=2, sticky=N+S+W+E)
+        self.add_bu = Button(self.top_level, text=text_bu, command=self.add_product)
+        self.add_bu.grid(row=3, column=0, columnspan=2, sticky=N + S + W + E)
+        if self.already_exists:
+            self.add_bu.config(state=DISABLED)
 
         for x in range(4):
             Grid.rowconfigure(self.top_level, x, weight=1)
@@ -40,7 +47,15 @@ class ExamineNewProduct:
             Grid.columnconfigure(self.top_level, x, weight=1)
 
     def add_product(self):
-        pass
+        self.service.save_products(self.product)
 
     def open_browser(self, event):
         webbrowser.open_new(self.product.link)
+
+    def update(self, data, event):
+        if event == Events.NEW_P:
+            id = data
+            if id == self.product.id:
+                self.add_bu.config(state=DISABLED)
+        else:
+            print('Update not implemented for ' + str(event))
