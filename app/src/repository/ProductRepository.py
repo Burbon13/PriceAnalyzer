@@ -35,7 +35,7 @@ class ProductMongoDbRepository:
                                'best_price': best_price if best_price < current_price else current_price,
                                'current_price_date': history_obj.date,
                                'best_price_date': best[
-                                   'best_price_date'] if best_price < current_price else history_obj.date}}
+                                   'best_price_date'] if best_price <= current_price else history_obj.date}}
         self.__product_table.update_one({'_id': history_obj.product_id}, new_values)
 
     def set_monitoring_product(self, product_id, to_monitor=True):
