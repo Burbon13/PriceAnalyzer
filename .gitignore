@@ -107,4 +107,4 @@ venv_prices/
 
 \.idea/workspace\.xml
 
-.html
+*.html
