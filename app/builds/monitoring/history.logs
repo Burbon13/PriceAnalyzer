@@ -1,0 +1,33 @@
+INFO:root:Starting monitoring task at 2019-03-24 13:15:13.505809
+CRITICAL:root:Incorrect number of arguments
+INFO:root:Exiting monitoring task at 2019-03-24 13:15:13.506804
+INFO:root:Starting monitoring task at 2019-03-24 13:17:17.066369
+INFO:root:Shop: emag
+INFO:root:DB name: price_manager
+INFO:root:Product table: product
+INFO:root:History table: price_history
+INFO:root:Connecting to database...
+INFO:root:Loading products to monitor...
+INFO:root:Total number of products found: 10
+INFO:root:Starting making requests...
+INFO:root:Request for product_id: 5116773
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 4941583
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 4878393
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 41276380
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 4917983
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 1222667
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 3832548
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 4917988
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 5019732
+INFO:root:Response status code: 200
+INFO:root:Request for product_id: 5309662
+INFO:root:Response status code: 200
+INFO:root:Exiting monitoring task at 2019-03-24 13:17:25.121638

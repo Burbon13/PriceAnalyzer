@@ -1,50 +1,67 @@
+import sys
 import requests
+import logging
 from datetime import datetime
 from pymongo import MongoClient
 from Domain import Product, History
 from html_processing import get_history_from_product_page
 
-# TODO: Handle exceptions, check for connectivity issues
+def run():
+    if len(sys.argv) != 5:
+        logging.fatal('Incorrect number of arguments')
+        return
 
-print('Initializing monitoring')
+    shop = sys.argv[1]
+    logging.info('Shop: ' + str(shop))
+    db_name = sys.argv[2]
+    logging.info('DB name: ' + str(db_name))
+    product_table_name = sys.argv[3]
+    logging.info('Product table: ' + str(product_table_name))
+    price_history_table_name = sys.argv[4]
+    logging.info('History table: ' + str(price_history_table_name))
 
-shop = 'emag'
-db_name = 'price_manager'
-product_table_name = 'product'
-price_history_table_name = 'price_history'
+    logging.info('Connecting to database...')
+    db_connection = MongoClient()[db_name]
+    product_table = db_connection[product_table_name]
+    price_history_table = db_connection[price_history_table_name]
 
-print('Connecting to database')
-db_connection = MongoClient()[db_name]
-product_table = db_connection[product_table_name]
-price_history_table = db_connection[price_history_table_name]
+    logging.info('Loading products to monitor...')
+    monitored_products = []
+    for x in product_table.find():
+        monitored_products.append(Product(x['_id'], x['title'], x['link'], x['best_price'], x['current_price'],
+                                          x['best_price_date'], x['current_price_date'], image_link=x['image_link'],
+                                          monitored=bool(x['monitored'])))
+    logging.info('Total number of products found: ' + str(len(monitored_products)))
 
-print('Finding products to monitor')
-monitored_products = []
-for x in product_table.find():
-    monitored_products.append(Product(x['_id'], x['title'], x['link'], x['best_price'], x['current_price'],
-                            x['best_price_date'], x['current_price_date'], image_link=x['image_link'],
-                            monitored=bool(x['monitored'])))
+    logging.info('Starting making requests...')
+    for product in monitored_products:
+        logging.info('Request for product_id: ' + str(product._id))
+        response = requests.get(product.link)
+        logging.info('Response status code: ' + str(response.status_code))
 
-print('Finding current prices')
-for product in monitored_products:
-    response = requests.get(product.link)
-    pricesDTO = get_history_from_product_page(response.content)
-    history = History(product._id, pricesDTO.old_price, pricesDTO.new_price, shop, datetime.now())
+        if response.status_code == 200:
+            prices_dto = get_history_from_product_page(response.content)
+            history = History(product._id, prices_dto.old_price, prices_dto.new_price, shop, datetime.now())
 
-    #self.product_repo.save_one_history(history)
-    price_history_table.insert_one(history.__dict__)
+            price_history_table.insert_one(history.__dict__)
 
-    my_query = {'_id': history.product_id}
+            my_query = {'_id': history.product_id}
 
-    best = product_table.find_one(my_query)
-    best_price = best['best_price']
-    current_price = history.new_price
-    new_values = {'$set': {'current_price': current_price,
-                           'best_price': best_price if best_price < current_price else current_price,
-                           'current_price_date': history.date,
-                           'best_price_date': best[
-                               'best_price_date'] if best_price <= current_price else history.date}}
-    product_table.update_one({'_id': history.product_id}, new_values)
+            best = product_table.find_one(my_query)
+            best_price = best['best_price']
+            current_price = history.new_price
+            new_values = {'$set': {'current_price': current_price,
+                                   'best_price': best_price if best_price < current_price else current_price,
+                                   'current_price_date': history.date,
+                                   'best_price_date': best[
+                                       'best_price_date'] if best_price <= current_price else history.date}}
+            product_table.update_one({'_id': history.product_id}, new_values)
 
-print('Monitoring finished')
-input('Press enter to finish')
+logging.basicConfig(filename='history.logs', level=logging.INFO)
+logging.info('Starting monitoring task at ' + str(datetime.now()))
+try:
+    run()
+except Exception as e:
+    logging.fatal('Task encountered exception:')
+    logging.fatal(e)
+logging.info('Exiting monitoring task at ' + str(datetime.now()))
