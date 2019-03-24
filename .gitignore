@@ -107,4 +107,6 @@ venv_prices/
 
 \.idea/workspace\.xml
 
+# not working
 *.html
+builds/
