@@ -1,10 +1,12 @@
 import sys
 import requests
 import logging
+import os
 from datetime import datetime
 from pymongo import MongoClient
 from Domain import Product, History
 from html_processing import get_history_from_product_page
+
 
 def run():
     if len(sys.argv) != 5:
@@ -27,7 +29,8 @@ def run():
 
     logging.info('Loading products to monitor...')
     monitored_products = []
-    for x in product_table.find():
+    monitored_filter = {'monitored': True}
+    for x in product_table.find(monitored_filter):
         monitored_products.append(Product(x['_id'], x['title'], x['link'], x['best_price'], x['current_price'],
                                           x['best_price_date'], x['current_price_date'], image_link=x['image_link'],
                                           monitored=bool(x['monitored'])))
@@ -57,7 +60,9 @@ def run():
                                        'best_price_date'] if best_price <= current_price else history.date}}
             product_table.update_one({'_id': history.product_id}, new_values)
 
-logging.basicConfig(filename='history.logs', level=logging.INFO)
+
+dir_path = 'C:\\Work\\PriceAnalyzer\\app\\builds\monitoring\\1.1\\dist'
+logging.basicConfig(filename=str(dir_path) + '\\history.logs', level=logging.INFO)
 logging.info('Starting monitoring task at ' + str(datetime.now()))
 try:
     run()

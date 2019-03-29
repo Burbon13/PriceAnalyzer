@@ -56,7 +56,8 @@ class ProductsMenu:
         index = int(w.curselection()[0])
 
         new_win = Toplevel(self.top_level)
-        ex = ExamineProduct(self.service, self.products[index], new_win)
+        # TODO: Remove complet products, memorize only title and index
+        ex = ExamineProduct(self.service, self.service.find_product(self.products[index]._id), new_win)
         self.service.add_observer(ex, Events.MONITORING, Events.SCAN)
         new_win.protocol("WM_DELETE_WINDOW", lambda: self.destroy_examination(ex, new_win))
 

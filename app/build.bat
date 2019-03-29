@@ -1,2 +1,3 @@
 echo off
 pyinstaller --paths C:\Windows\WinSxS\x86_microsoft-windows-m..namespace-downlevel_31bf3856ad364e35_10.0.17134.1_none_50c6cb8431e7428f --onefile --noconsole -p src\ --distpath builds\monitoring\1.1\dist\ --workpath builds\monitoring\1.1\temp\ --specpath builds\monitoring\1.1\spec\ src\tasks\monitor_task.pyw
+pyinstaller --paths C:\Windows\WinSxS\x86_microsoft-windows-m..namespace-downlevel_31bf3856ad364e35_10.0.17134.1_none_50c6cb8431e7428f --onefile --noconsole -p src\ --distpath builds\gui\1.1\dist\ --workpath builds\gui\1.1\temp\ --specpath builds\gui\1.1\spec\ src\main.py

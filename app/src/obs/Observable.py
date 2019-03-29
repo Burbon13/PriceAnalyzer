@@ -10,17 +10,17 @@ class Observable:
             Events.DEL_P: [],
             Events.SCAN: []
         }
-        self.print_stats()
+        # self.print_stats()
 
     def add_observer(self, observer, *events):
         for event in events:
             self.observers[event].append(observer)
-        self.print_stats()
+        # self.print_stats()
 
     def remove_observer(self, observer, *events):
         for event in events:
             self.observers[event].remove(observer)
-        self.print_stats()
+        # self.print_stats()
 
     def notify_observers(self, data, event):
         for obs in self.observers[event]:
