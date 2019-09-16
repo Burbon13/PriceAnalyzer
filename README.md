@@ -4,6 +4,12 @@ PriceAnalyzer
 Straightforward desktop application with a minimalist GUI that lets the user
 track the evolution of any product's prices (www.emag.ro only).
 
+## How does it work?
+
+It makes HTTP requests to www.emag.ro, parses the response and saves the information inside MongoDB.
+
+## UX
+
 When opening the application the main menu appears, containing 4 buttons:
 - **My Products:** shows the saved products
 - **Add Products:** opens a search menu where the user can add new products
@@ -12,7 +18,7 @@ When opening the application the main menu appears, containing 4 buttons:
 
 ![Image](readme_pics/main_menu.png)
 
-## My products Menu
+### My products Menu
 
 It shows all of the saved products. There are **2 types** of saved products:
 - **Traced (green):** whenever a scan is performed, its price will be updated
@@ -38,7 +44,7 @@ If the "Turn off" button is pressed, the following happens:
 
 And if the user changes his mind he can easily turn back on the tracing by pressing "Turn on".
 
-## New products menu
+### New products menu
 
 Whenever the user wants to add a new product, he can easily just enter the "Add Products" menu, enter the name of the product, choose a category (e.g. Phones, Laptops, etc.) and press "Search".
 
@@ -51,3 +57,7 @@ The products are loaded into a list. If a product is marked in yellow that means
 By double clicking any product, a new window containing the picture and the link of the product is brought up.
 
 ![Image](readme_pics/new_iphone.png)
+
+## Technologies used
+- Python + Tkinter
+- MongoDB
