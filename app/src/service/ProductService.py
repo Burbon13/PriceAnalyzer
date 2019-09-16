@@ -68,11 +68,15 @@ class ProductService(Observable):
 
         try:
             logging.info('Sending http request')
+            print(url)
             response = requests.get(url)
+            print('Executed')
+            print('Response: ' + str(response))
             logging.info('Http request response status code %d' % response.status_code)
             html_data = response.content
             product_data_list = scan_html_for_products(html_data, shop, product_name)
             # save_to_db(product_data_list, mongo_db)
+            print('Product list data ' + str(product_data_list))
             return product_data_list
         except ConnectionError as e:
             logging.critical(e)

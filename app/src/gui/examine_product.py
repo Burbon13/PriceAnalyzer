@@ -75,9 +75,9 @@ class ExamineProduct:
         line.get_tk_widget().grid(row=5, column=0, columnspan=2)
 
         if len(history) > 0:
-            data = {'Date': [h[0] for h in history], 'Price': [h[1] for h in history]}
-            df = DataFrame(data, columns=['Date', 'Price'])
-            df = df[['Date', 'Price']].groupby('Date').sum()
+            data = {'Date': [h[0] for h in history], 'Price (ron)': [h[1] for h in history]}
+            df = DataFrame(data, columns=['Date', 'Price (ron)'])
+            df = df[['Date', 'Price (ron)']].groupby('Date').sum()
             df.plot(kind='line', legend=True, ax=ax, color='r', marker='o', fontsize=10)
 
         ax.set_title('Price evolution')
@@ -90,12 +90,12 @@ class ExamineProduct:
 
     def set_price_labels(self):
         current_price = self.product.current_price
-        current_price_str = str(current_price) + '  (' + str(self.product.current_price_date.strftime(
+        current_price_str = str(current_price) + ' ron  (' + str(self.product.current_price_date.strftime(
             "%Y-%m-%d %H:%M:%S")) + ')' if current_price != -1 else 'No data record'
         self.current_price_label.config(text=current_price_str)
 
         lowest_price = self.product.best_price
-        lowest_price_str = str(lowest_price) + '  (' + str(self.product.best_price_date.strftime(
+        lowest_price_str = str(lowest_price) + ' ron  (' + str(self.product.best_price_date.strftime(
             "%Y-%m-%d %H:%M:%S")) + ')' if lowest_price != -1 else 'No data record'
         self.best_price_label.config(text=lowest_price_str)
 

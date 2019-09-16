@@ -36,7 +36,7 @@ class ExamineNewProduct:
         panel = Label(self.top_level, image=self.mem_image)
         panel.grid(row=1, column=0, rowspan=2, sticky=N + S + W + E)
 
-        Label(self.top_level, text='Current price: ' + str(self.product.new_price)).grid(row=2, column=1)
+        Label(self.top_level, text='Current price: ' + str(self.product.new_price) + ' ron').grid(row=2, column=1)
 
         text_bu = 'Add'
         self.add_bu = Button(self.top_level, text=text_bu, command=self.add_product)

@@ -46,8 +46,9 @@ class MenuWindow(Frame):
         self.scan_bu = Button(self, text="Scan now", command=self.scan_my_products)
         self.scan_bu.pack(fill=X, padx=10, pady=10)
 
-        settings_bu = Button(self, text="Settings")
-        settings_bu.pack(fill=X, padx=10, pady=10)
+        # Not implemented
+        # settings_bu = Button(self, text="Settings")
+        # settings_bu.pack(fill=X, padx=10, pady=10)
 
         exit_bu = Button(self, text="Quit", command=self.exit_program)
         exit_bu.pack(fill=X, padx=10, pady=10)
