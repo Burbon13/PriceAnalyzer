@@ -59,10 +59,7 @@ By double clicking any product, a new window containing the picture and the link
 ![Image](readme_pics/new_iphone.png)
 
 The user only needs to click "Add" and the products is saved, along with it's current price.
-<<<<<<< HEAD
 
 ## Technologies used
 - Python + Tkinter
 - MongoDB
-=======
->>>>>>> 51e8ca12a25b87dd624a2faf249fb6afb127887f
